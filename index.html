@@ -19,14 +19,28 @@
     label {
       font-weight: bold;
     }
-    input, select {
-      width: 100%;
-      padding: 10px;
+    .input-group {
       margin-bottom: 12px;
+    }
+    .input-group label {
+      display: block;
+      margin-bottom: 4px;
+    }
+    .input-group input {
+      width: calc(100% - 50px);
+      padding: 10px;
       border: 1px solid #ccc;
       border-radius: 8px;
       box-sizing: border-box;
       font-size: 1rem;
+      display: inline-block;
+    }
+    .unit-label {
+      display: inline-block;
+      width: 40px;
+      text-align: center;
+      font-size: 1rem;
+      vertical-align: middle;
     }
     button {
       padding: 12px;
@@ -65,23 +79,41 @@
 <body>
   <h2>Kira Berapa Sticker Muat Dalam Kertas</h2>
 
-  <label>Lebar kertas (inci):</label>
-  <input type="number" id="paperWidthInch" step="0.01" value="13">
+  <div class="input-group">
+    <label>Lebar kertas:</label>
+    <input type="number" id="paperWidthInch" step="0.01" value="13">
+    <span class="unit-label">inci</span>
+  </div>
 
-  <label>Tinggi kertas (inci):</label>
-  <input type="number" id="paperHeightInch" step="0.01" value="19">
+  <div class="input-group">
+    <label>Tinggi kertas:</label>
+    <input type="number" id="paperHeightInch" step="0.01" value="19">
+    <span class="unit-label">inci</span>
+  </div>
 
-  <label>Lebar sticker (cm):</label>
-  <input type="number" id="stickerWidthCM" step="0.01" value="3">
+  <div class="input-group">
+    <label>Lebar sticker:</label>
+    <input type="number" id="stickerWidthCM" step="0.01" value="3">
+    <span class="unit-label">cm</span>
+  </div>
 
-  <label>Tinggi sticker (cm):</label>
-  <input type="number" id="stickerHeightCM" step="0.01" value="3">
+  <div class="input-group">
+    <label>Tinggi sticker:</label>
+    <input type="number" id="stickerHeightCM" step="0.01" value="3">
+    <span class="unit-label">cm</span>
+  </div>
 
-  <label>Margin sekeliling (cm):</label>
-  <input type="number" id="margin" step="0.01" value="1">
+  <div class="input-group">
+    <label>Margin sekeliling:</label>
+    <input type="number" id="margin" step="0.01" value="1">
+    <span class="unit-label">cm</span>
+  </div>
 
-  <label>Jarak antara sticker (cm):</label>
-  <input type="number" id="spacing" step="0.01" value="0">
+  <div class="input-group">
+    <label>Jarak antara sticker:</label>
+    <input type="number" id="spacing" step="0.01" value="0">
+    <span class="unit-label">cm</span>
+  </div>
 
   <button onclick="calculate()">Kira</button>
   <button onclick="rotateStickers()">Tukar Orientasi</button>
