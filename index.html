@@ -27,7 +27,7 @@
       margin-bottom: 4px;
     }
     .input-group input {
-      width: calc(100% - 50px);
+      width: calc(100% - 60px);
       padding: 10px;
       border: 1px solid #ccc;
       border-radius: 8px;
@@ -35,12 +35,13 @@
       font-size: 1rem;
       display: inline-block;
     }
-    .unit-label {
-      display: inline-block;
-      width: 40px;
-      text-align: center;
+    .unit-select {
+      width: 50px;
+      padding: 10px;
       font-size: 1rem;
-      vertical-align: middle;
+      margin-left: 5px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
     }
     button {
       padding: 12px;
@@ -81,26 +82,38 @@
 
   <div class="input-group">
     <label>Lebar kertas:</label>
-    <input type="number" id="paperWidthInch" step="0.01" value="13">
-    <span class="unit-label">inci</span>
+    <input type="number" id="paperWidth" step="0.01" value="13">
+    <select id="paperWidthUnit" class="unit-select" onchange="convertUnit('width')">
+      <option value="inch" selected>in</option>
+      <option value="cm">cm</option>
+    </select>
   </div>
 
   <div class="input-group">
     <label>Tinggi kertas:</label>
-    <input type="number" id="paperHeightInch" step="0.01" value="19">
-    <span class="unit-label">inci</span>
+    <input type="number" id="paperHeight" step="0.01" value="19">
+    <select id="paperHeightUnit" class="unit-select" onchange="convertUnit('height')">
+      <option value="inch" selected>in</option>
+      <option value="cm">cm</option>
+    </select>
   </div>
 
   <div class="input-group">
     <label>Lebar sticker:</label>
-    <input type="number" id="stickerWidthCM" step="0.01" value="3">
-    <span class="unit-label">cm</span>
+    <input type="number" id="stickerWidth" step="0.01" value="3">
+    <select id="stickerWidthUnit" class="unit-select" onchange="convertUnit('swidth')">
+      <option value="cm" selected>cm</option>
+      <option value="inch">in</option>
+    </select>
   </div>
 
   <div class="input-group">
     <label>Tinggi sticker:</label>
-    <input type="number" id="stickerHeightCM" step="0.01" value="3">
-    <span class="unit-label">cm</span>
+    <input type="number" id="stickerHeight" step="0.01" value="3">
+    <select id="stickerHeightUnit" class="unit-select" onchange="convertUnit('sheight')">
+      <option value="cm" selected>cm</option>
+      <option value="inch">in</option>
+    </select>
   </div>
 
   <div class="input-group">
@@ -124,11 +137,47 @@
   <script>
     let rotated = false;
 
+    function convertUnit(field) {
+      let input, unit;
+      if (field === 'width') {
+        input = document.getElementById('paperWidth');
+        unit = document.getElementById('paperWidthUnit');
+      } else if (field === 'height') {
+        input = document.getElementById('paperHeight');
+        unit = document.getElementById('paperHeightUnit');
+      } else if (field === 'swidth') {
+        input = document.getElementById('stickerWidth');
+        unit = document.getElementById('stickerWidthUnit');
+      } else if (field === 'sheight') {
+        input = document.getElementById('stickerHeight');
+        unit = document.getElementById('stickerHeightUnit');
+      }
+
+      let value = parseFloat(input.value);
+      if (isNaN(value)) return;
+
+      if (unit.value === 'cm') {
+        input.value = (value * 2.54).toFixed(2);
+      } else {
+        input.value = (value / 2.54).toFixed(2);
+      }
+    }
+
     function calculate() {
-      const paperW = parseFloat(document.getElementById('paperWidthInch').value) * 2.54;
-      const paperH = parseFloat(document.getElementById('paperHeightInch').value) * 2.54;
-      let stickerW = parseFloat(document.getElementById('stickerWidthCM').value);
-      let stickerH = parseFloat(document.getElementById('stickerHeightCM').value);
+      let paperW = parseFloat(document.getElementById('paperWidth').value);
+      let paperH = parseFloat(document.getElementById('paperHeight').value);
+      const paperWUnit = document.getElementById('paperWidthUnit').value;
+      const paperHUnit = document.getElementById('paperHeightUnit').value;
+      if (paperWUnit === 'inch') paperW *= 2.54;
+      if (paperHUnit === 'inch') paperH *= 2.54;
+
+      let stickerW = parseFloat(document.getElementById('stickerWidth').value);
+      let stickerH = parseFloat(document.getElementById('stickerHeight').value);
+      const stickerWUnit = document.getElementById('stickerWidthUnit').value;
+      const stickerHUnit = document.getElementById('stickerHeightUnit').value;
+      if (stickerWUnit === 'inch') stickerW *= 2.54;
+      if (stickerHUnit === 'inch') stickerH *= 2.54;
+
       const margin = parseFloat(document.getElementById('margin').value);
       const spacing = parseFloat(document.getElementById('spacing').value);
 
