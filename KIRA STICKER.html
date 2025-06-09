@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <title>Kira Muat Sticker</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+    input, select {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 8px;
+    }
+    button {
+      padding: 10px 15px;
+      font-size: 16px;
+    }
+    .result {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+    .grid {
+      margin-top: 20px;
+      display: grid;
+      gap: 2px;
+      border: 1px solid #ccc;
+      background: #eee;
+    }
+    .cell {
+      background: #4caf50;
+      aspect-ratio: 1 / 1;
+      border: 1px solid #fff;
+    }
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Kira Berapa Sticker Muat Dalam Kertas</h2>
+
+  <label>Lebar kertas (inci):</label>
+  <input type="number" id="paperWidthInch" step="0.01" value="13">
+
+  <label>Tinggi kertas (inci):</label>
+  <input type="number" id="paperHeightInch" step="0.01" value="19">
+
+  <label>Lebar sticker (cm):</label>
+  <input type="number" id="stickerWidthCM" step="0.01" value="3">
+
+  <label>Tinggi sticker (cm):</label>
+  <input type="number" id="stickerHeightCM" step="0.01" value="3">
+
+  <label>Margin sekeliling (cm):</label>
+  <input type="number" id="margin" step="0.01" value="1">
+
+  <label>Jarak antara sticker (cm):</label>
+  <input type="number" id="spacing" step="0.01" value="0">
+
+  <div class="toolbar">
+    <button onclick="calculate()">Kira</button>
+    <button onclick="rotateStickers()">Tukar Orientasi</button>
+  </div>
+
+  <div class="result" id="result"></div>
+  <div class="grid" id="grid"></div>
+
+  <script>
+    let rotated = false;
+
+    function calculate() {
+      const paperW = parseFloat(document.getElementById('paperWidthInch').value) * 2.54;
+      const paperH = parseFloat(document.getElementById('paperHeightInch').value) * 2.54;
+      let stickerW = parseFloat(document.getElementById('stickerWidthCM').value);
+      let stickerH = parseFloat(document.getElementById('stickerHeightCM').value);
+      const margin = parseFloat(document.getElementById('margin').value);
+      const spacing = parseFloat(document.getElementById('spacing').value);
+
+      if (rotated) {
+        [stickerW, stickerH] = [stickerH, stickerW];
+      }
+
+      const usableW = paperW - 2 * margin;
+      const usableH = paperH - 2 * margin;
+
+      const countW = Math.floor((usableW + spacing) / (stickerW + spacing));
+      const countH = Math.floor((usableH + spacing) / (stickerH + spacing));
+      const total = countW * countH;
+
+      document.getElementById('result').innerHTML =
+        `Sticker muat: ${countW} mendatar × ${countH} menegak = <strong>${total} keping</strong>`;
+
+      const grid = document.getElementById('grid');
+      grid.innerHTML = '';
+      grid.style.gridTemplateColumns = `repeat(${countW}, 1fr)`;
+      grid.style.gridTemplateRows = `repeat(${countH}, 1fr)`;
+      for (let i = 0; i < total; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'cell';
+        grid.appendChild(cell);
+      }
+    }
+
+    function rotateStickers() {
+      rotated = !rotated;
+      calculate();
+    }
+
+    window.onload = calculate;
+  </script>
+</body>
+</html>
