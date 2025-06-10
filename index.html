@@ -63,6 +63,11 @@
       text-align: center;
       margin-top: 20px;
     }
+    .summary {
+      font-size: 0.95rem;
+      margin-top: 10px;
+      text-align: center;
+    }
     .grid {
       margin-top: 20px;
       display: grid;
@@ -84,7 +89,8 @@
   </style>
 </head>
 <body>
-  <h2>Kira Berapa Sticker Muat Dalam Kertas by Fazdly Azilan</h2>
+  <h2>Kira Berapa Sticker Muat Dalam Kertasn</h2>
+   <h2>by Fazdly Azilan</h2>
 
   <div class="input-group">
     <label>Lebar kertas:</label>
@@ -134,10 +140,17 @@
     <span class="unit-label">cm</span>
   </div>
 
+  <div class="input-group">
+    <label>Total kuantiti sticker diperlukan:</label>
+    <input type="number" id="targetQuantity" step="1" value="100">
+    <span class="unit-label">pcs</span>
+  </div>
+
   <button onclick="calculate()">Kira</button>
   <button onclick="rotateStickers()">Tukar Orientasi</button>
 
   <div class="result" id="result"></div>
+  <div class="summary" style="font-size: 1.2rem; font-weight: bold; color: #333;" id="summary"></div>
   <div class="grid" id="grid"></div>
 
   <div class="footer">
@@ -190,6 +203,7 @@
 
       const margin = parseFloat(document.getElementById('margin').value);
       const spacing = parseFloat(document.getElementById('spacing').value);
+      const targetQuantity = parseInt(document.getElementById('targetQuantity').value);
 
       if (rotated) {
         [stickerW, stickerH] = [stickerH, stickerW];
@@ -200,16 +214,20 @@
 
       const countW = Math.floor((usableW + spacing) / (stickerW + spacing));
       const countH = Math.floor((usableH + spacing) / (stickerH + spacing));
-      const total = countW * countH;
+      const totalPerSheet = countW * countH;
+      const sheetNeeded = Math.ceil(targetQuantity / totalPerSheet);
 
       document.getElementById('result').innerHTML =
-        `Sticker muat: ${countW} mendatar × ${countH} menegak = <strong>${total} keping</strong>`;
+        `Sticker muat: ${countW} mendatar × ${countH} menegak = <strong>${totalPerSheet} keping per helai</strong>`;
+
+      document.getElementById('summary').innerHTML =
+        `Total diperlukan: <strong>${targetQuantity}</strong> sticker → Diperlukan <strong>${sheetNeeded}</strong> helai kertas`;
 
       const grid = document.getElementById('grid');
       grid.innerHTML = '';
       grid.style.gridTemplateColumns = `repeat(${countW}, 1fr)`;
       grid.style.gridTemplateRows = `repeat(${countH}, 1fr)`;
-      for (let i = 0; i < total; i++) {
+      for (let i = 0; i < totalPerSheet; i++) {
         const cell = document.createElement('div');
         cell.className = 'cell';
         grid.appendChild(cell);
